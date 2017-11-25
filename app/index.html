@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethereum Medical Record DApp</title>
+  <meta charset="utf-8">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+  <script type="text/javascript" src="javascripts/jquery-1.8.1.min.js"></script>
+  <script type="text/javascript" src="javascripts/web3.min.js"></script>
+  <script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+  <style type="text/css">
+		div.result {
+			background-color: #cccccc;
+			word-wrap: break-word;
+		}
+		.cyphertext {
+			 word-wrap: break-word;
+		}
+        div.alert {
+            color: red;
+            font-size: 18px;    
+            background-color: #cccccc;     
+        }
+  </style>
+</head>
+<body class="container">
+    <h1>Medical Record in Ethereum <small> Homomorphic Encryption Demo</small></h1>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Patient Vitals</th>
+          <th>New Input</th>
+          <th>Prior</th>
+          <th>Current</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pulse</td>
+          <td><input type="text" id="pulse_val"/></td>
+          <td id="pulse_pv"></td>
+          <td id="pulse_nv"></td>
+          <td id="pulse_ch"></td>
+        </tr>
+        <tr>
+          <td>Respiratory Rate</td>
+          <td><input type="text" id="resp_val"/></td>
+          <td id="resp_pv"></td>
+          <td id="resp_nv"></td>
+          <td id="resp_ch"></td>
+        </tr>
+        <tr>
+          <td>Body Temperature</td>
+          <td><input type="text" id="temp_val"/></td>
+          <td id="temp_pv"></td>
+          <td id="temp_nv"></td>
+          <td id="temp_ch"></td>  
+        </tr>
+        <tr>
+          <td>BP Systolic</td>
+          <td><input type="text" id="bpsys_val"/></td>
+          <td id="bps_pv"></td>
+          <td id="bps_nv"></td>
+          <td id="bps_ch"></td>
+        </tr>
+        <tr>
+          <td>BP Diastolic</td>
+          <td><input type="text" id="bpdias_val"/></td>
+          <td id="bpd_pv"></td>
+          <td id="bpd_nv"></td>
+          <td id="bpd_ch"></td>
+        </tr>
+        <tr>
+          <td>Weight</td>
+          <td><input type="text" id="weight_val"/></td>
+          <td id="weight_pv"></td>
+          <td id="weight_nv"></td>
+          <td id="weight_ch"></td>
+        </tr>
+        <tr>
+          <td>Height (feet)</td>
+          <td><input type="text" id="htft_val"/></td>
+          <td id="htft_pv"></td>
+          <td id="htft_nv"></td>
+          <td id="htft_ch"></td>
+        </tr>
+        <tr>
+          <td>Height (inches)</td>
+          <td><input type="text" id="htin_val"/></td>
+          <td id="htin_pv"></td>
+          <td id="htin_nv"></td>
+          <td id="htin_ch"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="msg" class="alert"></div>
+  </div>
+  <a href="#" onclick="setRecord();keygen()" class="btn btn-primary">Update</a>
+  <p></p>
+  <h1>Vitals in Current Block</h1>
+  <div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Vitals</th>
+            <th>Current</th>
+            <th>Encrypted</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>Pulse</td>
+          <td id="pulse_dec"></td>
+          <td id="pulse_en"></td>
+        </tr>
+        <tr>
+          <td>Respiratory Rate</td>
+          <td id="resp_dec"></td>
+          <td id="resp_en"></td>
+        </tr>
+        <tr>
+          <td>Temperature</td>
+          <td id="temp_dec"></td>
+          <td id="temp_en" ></td>
+        </tr>
+        <tr>
+          <td>BP Systolic</td>
+          <td id="bps_dec"></td>
+          <td id="bps_en"></td>
+        </tr>
+        <tr>
+          <td>BP Diastolic</td>
+          <td id="bpd_dec"></td>
+          <td id="bpd_en"></td>
+        </tr>
+        <tr>
+          <td>Weight</td>
+          <td id="weight_dec"></td>
+          <td id="weight_en"></td>
+        </tr>
+        <tr>
+          <td>Height Ft</td>
+          <td id="hft_dec"></td>
+          <td id="hft_en"></td>
+        </tr>
+        <tr>
+          <td>Height in</td>
+          <td id="hin_dec"></td>
+          <td id="hin_en"></td>
+        </tr>
+    </tbody>
+  </table>
+  </div>
+<script type="text/javascript" src="javascripts/jsbn/jsbn.js"></script>
+<script type="text/javascript" src="javascripts/jsbn/jsbn2.js"></script>
+<script type="text/javascript" src="javascripts/jsbn/prng4.js"></script>
+<script type="text/javascript" src="javascripts/jsbn/rng.js"></script>
+<script type="text/javascript" src="javascripts/paillier.js"></script>
+<script type="text/javascript">
+var keys, encA, encB, encAB, encABC;
+var enc_vitals = {"Pulse": "pulse_en", "Respiration": "resp_en", "Temperature": "temp_en", "BP-sys":"bps_en", "BP-dias": "bpd_en", "Weight": "weight_en", "Height-ft": "hft_en", "Height-in": "hin_en"}
+var input_vitals = {"Pulse": "pulse_val", "Respiration": "resp_val", "Temperature": "temp_val", "BP-sys":"bpsys_val", "BP-dias": "bpdias_val", "Weight": "weight_val", "Height-ft": "htft_val", "Height-in": "htin_val"}
+
+var numbits = 1024;
+var vit = new Array();
+
+function keygen(){
+    keys = paillier.generateKeys(numbits);
+    encPaillier();
+}
+
+function encPaillier(){
+  let vnames = Object.keys(enc_vitals);
+  for (var i = 0; i < vnames.length; i++){
+        let in_vital = vnames[i];
+        let vital = parseInt($('#' + input_vitals[in_vital]).val());
+        encA = keys.pub.encrypt(nbv(vital));
+        $("#" + enc_vitals[in_vital]).html(encA.toString());
+  }
+}
+
+</script>  
+</body>
+</html>
