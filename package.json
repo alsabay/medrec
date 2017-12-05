@@ -36,6 +36,8 @@
   },
   "dependencies": {
     "big-integer": "^1.6.26",
-    "pidcrypt": "0.0.31"
+    "node-hcrypt": "0.0.8",
+    "pidcrypt": "0.0.31",
+    "server": "^1.0.9"
   }
 }

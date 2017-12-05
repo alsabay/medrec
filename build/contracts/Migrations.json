@@ -819,24 +819,9 @@
     "3": {
       "events": {},
       "links": {},
-      "address": "0x2ed9d93c6680007f816990a8eb2f9e8327630a3f"
-    },
-    "1511510234522": {
-      "events": {},
-      "links": {},
-      "address": "0x84990e49b2f41bd164b35ec6919f5bd436074960"
-    },
-    "1511523467101": {
-      "events": {},
-      "links": {},
-      "address": "0x45460c42d3be0aca39c5d905188e50db2a342871"
-    },
-    "1511603705603": {
-      "events": {},
-      "links": {},
-      "address": "0xc35ff59b03029a89c6f0f201c031d406d81ffe6d"
+      "address": "0x2f8d4c4dcc9a012f034cdcac22537848da39803c"
     }
   },
   "schemaVersion": "1.0.1",
-  "updatedAt": "2017-11-25T10:46:20.952Z"
+  "updatedAt": "2017-12-05T08:56:26.074Z"
 }

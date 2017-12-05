@@ -1,16 +1,29 @@
 // Import the page's CSS. Webpack will know what to do with it.
 import "../stylesheets/app.css";
+
 // Import js libraries
 /*
-import "../javascripts/bootstrap.min.js";
-import "../javascripts/bootstrap.js";
-import "../javascripts/jquery-1.8.1.min.js";
-import "../javascripts/jsbn/jsbn2.js";
-import "../javascripts/jsbn/prng4.js";
-import "../javascripts/jsbn/rng.js";
-import "../javascripts/jsbn/jsbn.js";
-import "../javascripts/paillier.js";
+require('./bootstrap.min.js');
+require('./bootstrap.js');
+require('./jquery-1.8.1.min.js');
+require('./jsbn/jsbn2.js');
+require('./jsbn/prng4.js');
+require('./jsbn/rng.js');
+require('./jsbn/jsbn.js');
+require('./paillier.js');
+
+eval(require('fs').readFileSync('./bootstrap.min.js', 'utf8'));
+eval(require('fs').readFileSync('./bootstrap.js', 'utf8'));
+eval(require('fs').readFileSync('./jquery-1.8.1.min.js', 'utf8'));
+eval(require('fs').readFileSync('./jsbn/jsbn2.js', 'utf8'));
+eval(require('fs').readFileSync('./jsbn/prng4.js', 'utf8'));
+eval(require('fs').readFileSync('./jsbn/rng.js', 'utf8'));
+eval(require('fs').readFileSync('./jsbn/jsbn.js', 'utf8'));
+eval(require('fs').readFileSync('./paillier.js', 'utf8'));
 */
+
+
+
 // Import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
@@ -19,11 +32,7 @@ import { default as contract } from 'truffle-contract'
 import medical_record_artifacts from '../../build/contracts/Medical_record.json'
 
 var Medical_record = contract(medical_record_artifacts);
-
-// The following code is simple to show off interacting with your contracts.
-// As your needs grow you will likely need to change its form and structure.
-// For application bootstrapping, check out window.addEventListener below.
-
+/*
 var prior_vitals = {"Pulse": "pulse_pv", "Respiration": "resp_pv", "Temperature": "temp_pv", "BP-sys":"bps_pv", "BP-dias": "bpd_pv", "Weight": "weight_pv", "Height-ft": "htft_pv", "Height-in": "htin_pv"}
 var cur_vitals = {"Pulse": "pulse_nv", "Respiration": "resp_nv", "Temperature": "temp_nv", "BP-sys":"bps_nv", "BP-dias": "bpd_nv", "Weight": "weight_nv", "Height-ft": "htft_nv", "Height-in": "htin_nv"}
 var diff_vitals = {"Pulse": "pulse_ch", "Respiration": "resp_ch", "Temperature": "temp_ch", "BP-sys":"bps_ch", "BP-dias": "bpd_ch", "Weight": "weight_ch", "Height-ft": "htft_ch", "Height-in": "htin_ch"}
@@ -34,6 +43,27 @@ var enc_vitals = {"Pulse": "pulse_en", "Respiration": "resp_en", "Temperature": 
 var v_array = new Array();
 var curr = new Array();
 var prio = new Array();
+var keys;
+var numbits = 256;
+
+
+function keygen(){
+    keys = paillier.generateKeys(numbits);
+    console.log('key');
+//    encPaillier();
+}
+
+
+function encPaillier(){
+  let vnames = Object.keys(enc_vitals);
+  for (var i = 0; i < vnames.length; i++){
+        let in_vital = vnames[i];
+        let vital = parseInt($('#' + input_vitals[in_vital]).val());
+        encA = keys.pub.encrypt(nbv(vital));
+        $("#" + enc_vitals[in_vital]).html(encA.toString());
+  }
+}
+
 
 function readInput(){
     var vnames = Object.keys(input_vitals);
@@ -99,8 +129,8 @@ $(document).ready(function() {
                 // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt  fail)
         window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-
+    keygen();
     Medical_record.setProvider(web3.currentProvider);
     updatePage();
 });
-
+*/
